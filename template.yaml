@@ -12,8 +12,8 @@ Resources:
   HelloWorldFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: dist/
-      Handler: interfaces/lambda/handler.ts
+      CodeUri: '.'
+      Handler: dist/interfaces/lambda/handler.handler
       Runtime: nodejs20.x
       Architectures:
         - x86_64
@@ -27,10 +27,14 @@ Resources:
       BuildMethod: esbuild
       BuildProperties:
         Minify: true
-        Target: "es2020"
         Sourcemap: true
         EntryPoints: 
-        - app.ts
+        - dist/interfaces/lambda/handler.js
+        External:
+        - class-transformer
+        - class-validator
+        - '@nestjs/microservices'
+        - '@nestjs/websockets'
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
