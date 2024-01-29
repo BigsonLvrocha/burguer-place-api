@@ -5,7 +5,7 @@ import express from 'express';
 import { configure } from '@codegenie/serverless-express';
 import { ExpressAdapter } from '@nestjs/platform-express';
 
-import { AppModule } from './app.module.js';
+import { AppModule } from '../../app.module.js';
 
 async function buildHandler(): Promise<Handler> {
   const expressApp = express();
