@@ -5,11 +5,13 @@ import { IngredientAmount } from './ingredient-amount.js';
 type RecipeProps = {
   name: string;
   ingredients: IngredientAmount[];
+  storeId: string;
 };
 
 export class Recipe {
   public readonly name: string;
   public readonly ingredients: IngredientAmount[];
+  public readonly storeId: string;
 
   constructor(props: RecipeProps) {
     if (props.ingredients.length === 0) {
@@ -18,6 +20,7 @@ export class Recipe {
 
     this.name = this.parseRecipeName(props.name);
     this.ingredients = props.ingredients;
+    this.storeId = props.storeId;
   }
 
   private parseRecipeName(name: string): string {

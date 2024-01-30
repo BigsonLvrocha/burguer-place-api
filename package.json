@@ -31,7 +31,8 @@
     "express": "^4.18.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
-    "sequelize": "^6.35.2"
+    "sequelize": "^6.35.2",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
@@ -42,6 +43,7 @@
     "@types/jest": "^29.5.2",
     "@types/node": "^20.11.10",
     "@types/supertest": "^6.0.0",
+    "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.42.0",
@@ -73,7 +75,9 @@
     "moduleNameMapper": {
       "^(\\.{1,2}/.*)\\.js$": "$1"
     },
-    "extensionsToTreatAsEsm": [".ts"],
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ],
     "transform": {
       "^.+\\.tsx?$": [
         "ts-jest",
