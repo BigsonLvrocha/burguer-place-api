@@ -1,15 +1,15 @@
 import { InvalidRecipeIngredientsQuantityException } from './errors/invalid-recipe-ingredients-quantity-exception.js';
 import { InvalidRecipeNameException } from './errors/invalid-recipe-name-exception.js';
-import { RecipeIngredient } from './recipe-ingredient.js';
+import { IngredientAmount } from './ingredient-amount.js';
 
 type RecipeProps = {
   name: string;
-  ingredients: RecipeIngredient[];
+  ingredients: IngredientAmount[];
 };
 
 export class Recipe {
   public readonly name: string;
-  public readonly ingredients: RecipeIngredient[];
+  public readonly ingredients: IngredientAmount[];
 
   constructor(props: RecipeProps) {
     if (props.ingredients.length === 0) {

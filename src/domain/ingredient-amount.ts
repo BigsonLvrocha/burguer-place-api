@@ -1,16 +1,16 @@
 import { InvalidIngredientNameException } from './errors/invalid-ingredient-name-exception.js';
 import { InvalidIngredientQuantityException } from './errors/invalid-ingredient-quantity-quantity-exception.js';
 
-type RecipeIngredientProps = {
+type IngredientAmountProps = {
   ingredient: string;
   quantity: number;
 };
 
-export class RecipeIngredient {
+export class IngredientAmount {
   public readonly ingredient: string;
   public readonly quantity: number;
 
-  constructor(props: RecipeIngredientProps) {
+  constructor(props: IngredientAmountProps) {
     if (props.quantity <= 0)
       throw new InvalidIngredientQuantityException(
         props.ingredient,
