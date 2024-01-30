@@ -4,8 +4,8 @@ import { Sequelize } from 'sequelize';
 import { DbModule, StoreModelStatic, storeModelToken } from './db/index.js';
 import { sequelizeToken } from './db/sequelize.js';
 
+import { ConfigModule } from '@nestjs/config';
 import { v4 as uuid } from 'uuid';
-import { CommonModule } from '../common.module.js';
 import { Store } from '../domain/store.js';
 import { SequelizeStoreRepository } from './sequelize-store-repository.js';
 
@@ -17,7 +17,13 @@ describe('sequelize-store-repository', () => {
 
   beforeAll(async () => {
     testModule = await Test.createTestingModule({
-      imports: [CommonModule, DbModule],
+      imports: [
+        ConfigModule.forRoot({
+          isGlobal: true,
+          envFilePath: '.env.test',
+        }),
+        DbModule,
+      ],
       providers: [SequelizeStoreRepository],
     }).compile();
 
