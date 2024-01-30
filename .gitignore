@@ -34,4 +34,9 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
+# SAM CLI
 .aws-sam
+
+# ENV vars
+.env*
+!.env.example

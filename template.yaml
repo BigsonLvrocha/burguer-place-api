@@ -9,8 +9,22 @@ Globals:
     Timeout: 3
 
 Resources:
-  HelloWorldFunction:
+  BurguerDBInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: 5
+      Engine: postgres
+      EngineVersion: "16.1"
+      DBInstanceClass: db.t3.micro
+      BackupRetentionPeriod: 0
+      DBInstanceIdentifier: burguer-db
+      DBName: burguer
+      ManageMasterUserPassword: true
+      MasterUsername: flipper
+
+  BurguerPlaceFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    DependsOn: BurguerDBInstance
     Properties:
       CodeUri: '.'
       Handler: dist/interfaces/lambda/handler.handler
@@ -23,6 +37,14 @@ Resources:
           Properties:
             Path: /hello
             Method: get
+      Environment:
+        Variables:
+          DB_HOST: !GetAtt BurguerDBInstance.Endpoint.Address
+          DB_PORT: !GetAtt BurguerDBInstance.Endpoint.Port
+          DB_NAME: !GetAtt BurguerDBInstance.DBName
+          DB_USER: !GetAtt BurguerDBInstance.MasterUsername
+          DB_PASS_ARN: !GetAtt BurguerDBInstance.MasterUserSecret.SecretArn
+
     Metadata: # Manage esbuild properties
       BuildMethod: esbuild
       BuildProperties:
@@ -43,9 +65,9 @@ Outputs:
   HelloWorldApi:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
-  HelloWorldFunction:
+  BurguerPlaceFunction:
     Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
-  HelloWorldFunctionIamRole:
+    Value: !GetAtt BurguerPlaceFunction.Arn
+  BurguerPlaceFunctionIamRole:
     Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+    Value: !GetAtt BurguerPlaceFunctionRole.Arn

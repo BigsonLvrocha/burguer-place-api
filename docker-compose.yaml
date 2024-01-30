@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:16.1
+    environment:
+      POSTGRES_USER: flipper
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: burguer
+    ports:
+      - 5432:5432
+  
+networks:
+  default:
+    name: burguer-place-api
+    driver: bridge
+
+    
+
