@@ -10,6 +10,7 @@ async function createSequelize(config: ConfigService) {
     username: config.get('DB_USER'),
     password: config.get('DB_PASS'),
     database: config.get('DB_NAME'),
+    logging: false,
   });
 
   await sequelize.authenticate();

@@ -49,7 +49,7 @@ async function initRecipeIngredientModel(
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-          model: 'ingredient',
+          model: 'ingredients',
           key: 'id',
         },
       },
@@ -57,7 +57,7 @@ async function initRecipeIngredientModel(
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-          model: 'recipe',
+          model: 'recipes',
           key: 'id',
         },
       },
@@ -65,7 +65,7 @@ async function initRecipeIngredientModel(
         type: DataTypes.UUID,
         allowNull: false,
         references: {
-          model: 'store',
+          model: 'stores',
           key: 'id',
         },
       },

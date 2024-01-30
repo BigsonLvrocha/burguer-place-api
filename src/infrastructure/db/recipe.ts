@@ -52,7 +52,7 @@ async function initRecipeModel(
     },
     {
       sequelize,
-      modelName: 'recipe',
+      modelName: 'recipes',
       timestamps: false,
       underscored: true,
     },
