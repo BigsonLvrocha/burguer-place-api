@@ -1,7 +1,12 @@
 export { DbModule } from './db.module.js';
-export { IngredientModelStatic, ingredientModelToken } from './ingredient.js';
 export {
+  IngredientModel,
+  IngredientModelStatic,
+  ingredientModelToken,
+} from './ingredient.js';
+export {
+  RecipeIngredientModel,
   RecipeIngredientModelStatic,
   recipeIngredientModelToken,
 } from './recipe-ingredient.js';
-export { RecipeModelStatic, recipeModelToken } from './recipe.js';
+export { RecipeModel, RecipeModelStatic, recipeModelToken } from './recipe.js';

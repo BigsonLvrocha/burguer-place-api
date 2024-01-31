@@ -81,6 +81,9 @@ async function initRecipeIngredientModel(
     through: RecipeIngredientModel,
   });
 
+  RecipeIngredientModel.belongsTo(ingredientModel);
+  RecipeIngredientModel.belongsTo(recipeModel);
+
   // TODO: create a migration for this
   await RecipeIngredientModel.sync();
 

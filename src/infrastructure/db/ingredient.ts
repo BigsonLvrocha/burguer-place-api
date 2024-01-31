@@ -7,6 +7,8 @@ import {
   Model,
   Sequelize,
 } from 'sequelize';
+import { RecipeIngredientModel } from './recipe-ingredient.js';
+import { RecipeModel } from './recipe.js';
 import { sequelizeToken } from './sequelize.js';
 
 export class IngredientModel extends Model<
@@ -19,6 +21,10 @@ export class IngredientModel extends Model<
 
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+
+  declare recipeIngredient?: RecipeIngredientModel;
+  declare recipeIngredients?: RecipeIngredientModel[];
+  declare recipes?: RecipeModel[];
 }
 
 export type IngredientModelStatic = typeof IngredientModel;

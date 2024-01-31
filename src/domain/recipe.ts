@@ -20,7 +20,7 @@ export class Recipe {
     }
 
     this.name = this.parseRecipeName(props.name);
-    this.id = uuid();
+    this.id = props.id ?? uuid();
     this.ingredients = props.ingredients;
   }
 
