@@ -4,7 +4,6 @@ import { IngredientAmount, Recipe, RecipeRepository } from '../domain/index.js';
 
 import { Transaction } from 'sequelize';
 import {
-  IngredientModel,
   IngredientModelStatic,
   RecipeIngredientModelStatic,
   RecipeModel,
@@ -29,14 +28,14 @@ export class SequelizeRecipeRepository implements RecipeRepository {
 
   async list(): Promise<Recipe[]> {
     const recepies = await this.recipeModel.findAll({
-      include: [IngredientModel],
+      include: [this.ingredientModel],
     });
     return recepies.map((recipe) => this.adaptRecipeModelToRecipe(recipe));
   }
 
   async get(recipeId: string): Promise<Recipe | null> {
     const recipe = await this.recipeModel.findByPk(recipeId, {
-      include: [IngredientModel],
+      include: [this.ingredientModel],
     });
     if (recipe === null) {
       return null;
@@ -157,7 +156,7 @@ export class SequelizeRecipeRepository implements RecipeRepository {
     const ingredients = recipeModel.ingredients.map((ingredientModel) => {
       const ingredientAmount = new IngredientAmount({
         ingredient: ingredientModel.name,
-        quantity: ingredientModel.recipeIngredient.amount,
+        quantity: ingredientModel.recipeIngredients.amount,
       });
 
       return ingredientAmount;

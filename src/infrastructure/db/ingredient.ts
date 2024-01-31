@@ -22,8 +22,7 @@ export class IngredientModel extends Model<
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
-  declare recipeIngredient?: RecipeIngredientModel;
-  declare recipeIngredients?: RecipeIngredientModel[];
+  declare recipeIngredients?: RecipeIngredientModel;
   declare recipes?: RecipeModel[];
 }
 

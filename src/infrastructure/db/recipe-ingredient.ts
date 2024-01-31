@@ -80,6 +80,9 @@ async function initRecipeIngredientModel(
   ingredientModel.belongsToMany(recipeModel, {
     through: RecipeIngredientModel,
   });
+  recipeModel.belongsToMany(ingredientModel, {
+    through: RecipeIngredientModel,
+  });
 
   RecipeIngredientModel.belongsTo(ingredientModel);
   RecipeIngredientModel.belongsTo(recipeModel);

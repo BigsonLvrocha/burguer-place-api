@@ -314,4 +314,76 @@ describe('SequelizeRecipeRepository', () => {
       });
     });
   });
+
+  describe('get', () => {
+    const recipe = new Recipe({
+      id: uuid(),
+      name: 'Recipe 1',
+      ingredients: [
+        new IngredientAmount({
+          ingredient: 'Ingredient 1',
+          quantity: 1,
+        }),
+        new IngredientAmount({
+          ingredient: 'Ingredient 2',
+          quantity: 2,
+        }),
+      ],
+    });
+
+    let recipeResult: Recipe;
+
+    beforeAll(async () => {
+      await recipeIngredientModel.destroy({ where: {} });
+      await recipeModel.destroy({ where: {} });
+      await ingredientModel.destroy({ where: {} });
+      await recipeModel.create({
+        id: recipe.id,
+        name: recipe.name,
+      });
+      const createdIngredients = await ingredientModel.bulkCreate([
+        { id: uuid(), name: 'Ingredient 1' },
+        { id: uuid(), name: 'Ingredient 2' },
+      ]);
+      await recipeIngredientModel.bulkCreate([
+        {
+          id: uuid(),
+          recipeId: recipe.id,
+          ingredientId: createdIngredients[0].id,
+          amount: 1,
+        },
+        {
+          id: uuid(),
+          recipeId: recipe.id,
+          ingredientId: createdIngredients[1].id,
+          amount: 2,
+        },
+      ]);
+
+      recipeResult = await recipeRepository.get(recipe.id);
+    });
+
+    it('returns the recipe', () => {
+      expect(recipeResult.id).toBe(recipe.id);
+    });
+
+    it('returns the recipe with correct name', () => {
+      expect(recipeResult.name).toBe(recipe.name);
+    });
+
+    it('has 2 ingredients', () => {
+      expect(recipeResult.ingredients).toHaveLength(2);
+    });
+
+    it('has the correct ingredients', () => {
+      expect(recipeResult.ingredients).toContainEqual({
+        ingredient: 'Ingredient 1',
+        quantity: 1,
+      });
+      expect(recipeResult.ingredients).toContainEqual({
+        ingredient: 'Ingredient 2',
+        quantity: 2,
+      });
+    });
+  });
 });
