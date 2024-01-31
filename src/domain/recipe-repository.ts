@@ -1,5 +1,7 @@
 import { Recipe } from './recipe.js';
 
+export const recipeRepositoryToken = Symbol('RecipeRepository');
+
 export interface RecipeRepository {
   list(): Promise<Recipe[]>;
   get(recipeId: string): Promise<Recipe | null>;
