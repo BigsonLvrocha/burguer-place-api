@@ -1,15 +1,18 @@
 import { FactoryProvider } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Config } from 'config.js';
 import { Sequelize } from 'sequelize';
 
 async function createSequelize(config: ConfigService) {
+  const databaseConfig = config.get<Config['database']>('database');
+
   const sequelize = new Sequelize({
     dialect: 'postgres',
-    port: config.get('DB_PORT'),
-    host: config.get('DB_HOST'),
-    username: config.get('DB_USER'),
-    password: config.get('DB_PASS'),
-    database: config.get('DB_NAME'),
+    port: databaseConfig.port,
+    host: databaseConfig.host,
+    username: databaseConfig.user,
+    password: databaseConfig.pass,
+    database: databaseConfig.name,
     logging: false,
   });
 
