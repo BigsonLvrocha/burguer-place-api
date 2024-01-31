@@ -1,13 +1,16 @@
+import { v4 as uuid } from 'uuid';
 import { InvalidRecipeIngredientsQuantityException } from './errors/invalid-recipe-ingredients-quantity-exception.js';
 import { InvalidRecipeNameException } from './errors/invalid-recipe-name-exception.js';
 import { IngredientAmount } from './ingredient-amount.js';
 
 type RecipeProps = {
+  id?: string;
   name: string;
   ingredients: IngredientAmount[];
 };
 
 export class Recipe {
+  public readonly id: string;
   public readonly name: string;
   public readonly ingredients: IngredientAmount[];
 
@@ -17,6 +20,7 @@ export class Recipe {
     }
 
     this.name = this.parseRecipeName(props.name);
+    this.id = uuid();
     this.ingredients = props.ingredients;
   }
 
