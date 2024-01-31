@@ -5,6 +5,7 @@ import {
   recipeIngredientModelToken,
 } from './recipe-ingredient.js';
 import { recipeModelProvider, recipeModelToken } from './recipe.js';
+import { SequelizeTearDown } from './sequelize-teardown.js';
 import { sequelizeProvider } from './sequelize.js';
 
 @Module({
@@ -13,6 +14,7 @@ import { sequelizeProvider } from './sequelize.js';
     ingredientModelProvider,
     recipeModelProvider,
     recipeIngredientModelProvider,
+    SequelizeTearDown,
   ],
   exports: [ingredientModelToken, recipeModelToken, recipeIngredientModelToken],
 })
