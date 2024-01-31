@@ -14,7 +14,6 @@ import {
 } from './ingredient.js';
 import { RecipeModel, RecipeModelStatic, recipeModelToken } from './recipe.js';
 import { sequelizeToken } from './sequelize.js';
-import { StoreModel, StoreModelStatic, storeModelToken } from './store.js';
 
 export class RecipeIngredientModel extends Model<
   InferAttributes<RecipeIngredientModel>,
@@ -23,7 +22,6 @@ export class RecipeIngredientModel extends Model<
   declare id: CreationOptional<string>;
   declare ingredientId: string;
   declare recipeId: string;
-  declare storeId: string;
   declare amount: number;
 
   declare createdAt: CreationOptional<Date>;
@@ -34,7 +32,6 @@ export type RecipeIngredientModelStatic = typeof RecipeIngredientModel;
 
 async function initRecipeIngredientModel(
   sequelize: Sequelize,
-  storeModel: StoreModelStatic,
   ingredientModel: IngredientModelStatic,
   recipeModel: RecipeModelStatic,
 ) {
@@ -61,14 +58,6 @@ async function initRecipeIngredientModel(
           key: 'id',
         },
       },
-      storeId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-          model: 'stores',
-          key: 'id',
-        },
-      },
       amount: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -83,9 +72,6 @@ async function initRecipeIngredientModel(
       underscored: true,
     },
   );
-
-  RecipeIngredientModel.belongsTo(storeModel, { foreignKey: 'storeId' });
-  StoreModel.hasMany(RecipeIngredientModel, { foreignKey: 'storeId' });
 
   RecipeIngredientModel.belongsTo(recipeModel, { foreignKey: 'recipeId' });
   RecipeModel.hasMany(RecipeIngredientModel, { foreignKey: 'recipeId' });
@@ -114,10 +100,5 @@ export const recipeIngredientModelProvider: FactoryProvider<
 > = {
   provide: recipeIngredientModelToken,
   useFactory: initRecipeIngredientModel,
-  inject: [
-    sequelizeToken,
-    storeModelToken,
-    ingredientModelToken,
-    recipeModelToken,
-  ],
+  inject: [sequelizeToken, ingredientModelToken, recipeModelToken],
 };

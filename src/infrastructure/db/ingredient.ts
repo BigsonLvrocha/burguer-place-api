@@ -8,7 +8,6 @@ import {
   Sequelize,
 } from 'sequelize';
 import { sequelizeToken } from './sequelize.js';
-import { StoreModel, StoreModelStatic, storeModelToken } from './store.js';
 
 export class IngredientModel extends Model<
   InferAttributes<IngredientModel>,
@@ -17,7 +16,6 @@ export class IngredientModel extends Model<
   declare id: CreationOptional<string>;
   declare name: string;
   declare amount: number;
-  declare storeId: string;
 
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
@@ -25,10 +23,7 @@ export class IngredientModel extends Model<
 
 export type IngredientModelStatic = typeof IngredientModel;
 
-async function initIngredientModel(
-  sequelize: Sequelize,
-  storeModel: StoreModelStatic,
-) {
+async function initIngredientModel(sequelize: Sequelize) {
   IngredientModel.init(
     {
       id: {
@@ -45,14 +40,6 @@ async function initIngredientModel(
         allowNull: false,
         defaultValue: 0,
       },
-      storeId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-          model: 'stores',
-          key: 'id',
-        },
-      },
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE,
     },
@@ -63,9 +50,6 @@ async function initIngredientModel(
       underscored: true,
     },
   );
-
-  IngredientModel.belongsTo(storeModel, { foreignKey: 'storeId' });
-  StoreModel.hasMany(IngredientModel, { foreignKey: 'storeId' });
 
   // TODO: create a migration for this
   await IngredientModel.sync();
@@ -80,5 +64,5 @@ export const ingredientModelProvider: FactoryProvider<
 > = {
   provide: ingredientModelToken,
   useFactory: initIngredientModel,
-  inject: [sequelizeToken, storeModelToken],
+  inject: [sequelizeToken],
 };

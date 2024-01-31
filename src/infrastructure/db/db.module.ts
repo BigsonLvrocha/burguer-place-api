@@ -6,21 +6,14 @@ import {
 } from './recipe-ingredient.js';
 import { recipeModelProvider, recipeModelToken } from './recipe.js';
 import { sequelizeProvider } from './sequelize.js';
-import { storeModelProvider, storeModelToken } from './store.js';
 
 @Module({
   providers: [
     sequelizeProvider,
-    storeModelProvider,
     ingredientModelProvider,
     recipeModelProvider,
     recipeIngredientModelProvider,
   ],
-  exports: [
-    storeModelToken,
-    ingredientModelToken,
-    recipeModelToken,
-    recipeIngredientModelToken,
-  ],
+  exports: [ingredientModelToken, recipeModelToken, recipeIngredientModelToken],
 })
 export class DbModule {}

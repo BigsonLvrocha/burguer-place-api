@@ -5,4 +5,3 @@ export {
   recipeIngredientModelToken,
 } from './recipe-ingredient.js';
 export { RecipeModelStatic, recipeModelToken } from './recipe.js';
-export { StoreModelStatic, storeModelToken } from './store.js';
