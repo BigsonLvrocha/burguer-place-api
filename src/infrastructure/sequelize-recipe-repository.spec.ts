@@ -386,4 +386,159 @@ describe('SequelizeRecipeRepository', () => {
       });
     });
   });
+
+  describe('list', () => {
+    const recipe1 = new Recipe({
+      id: uuid(),
+      name: 'Recipe 1',
+      ingredients: [
+        new IngredientAmount({
+          ingredient: 'Ingredient 1',
+          quantity: 1,
+        }),
+        new IngredientAmount({
+          ingredient: 'Ingredient 2',
+          quantity: 2,
+        }),
+      ],
+    });
+
+    const recipe2 = new Recipe({
+      id: uuid(),
+      name: 'Recipe 2',
+      ingredients: [
+        new IngredientAmount({
+          ingredient: 'Ingredient 1',
+          quantity: 1,
+        }),
+        new IngredientAmount({
+          ingredient: 'Ingredient 3',
+          quantity: 3,
+        }),
+      ],
+    });
+
+    let recipesResult: Recipe[];
+
+    beforeAll(async () => {
+      await recipeIngredientModel.destroy({ where: {} });
+      await recipeModel.destroy({ where: {} });
+      await ingredientModel.destroy({ where: {} });
+      await recipeModel.bulkCreate([
+        {
+          id: recipe1.id,
+          name: recipe1.name,
+        },
+        {
+          id: recipe2.id,
+          name: recipe2.name,
+        },
+      ]);
+      const createdIngredients = await ingredientModel.bulkCreate([
+        { id: uuid(), name: 'Ingredient 1' },
+        { id: uuid(), name: 'Ingredient 2' },
+        { id: uuid(), name: 'Ingredient 3' },
+      ]);
+      await recipeIngredientModel.bulkCreate([
+        {
+          id: uuid(),
+          recipeId: recipe1.id,
+          ingredientId: createdIngredients[0].id,
+          amount: 1,
+        },
+        {
+          id: uuid(),
+          recipeId: recipe1.id,
+          ingredientId: createdIngredients[1].id,
+          amount: 2,
+        },
+        {
+          id: uuid(),
+          recipeId: recipe2.id,
+          ingredientId: createdIngredients[0].id,
+          amount: 1,
+        },
+        {
+          id: uuid(),
+          recipeId: recipe2.id,
+          ingredientId: createdIngredients[2].id,
+          amount: 3,
+        },
+      ]);
+
+      recipesResult = await recipeRepository.list();
+    });
+
+    it('returns the recipes', () => {
+      expect(recipesResult).toHaveLength(2);
+    });
+
+    it('returns the recipes with correct format', () => {
+      expect(recipesResult).toContainEqual({
+        id: recipe1.id,
+        name: recipe1.name,
+        ingredients: expect.any(Array),
+      });
+      expect(recipesResult).toContainEqual({
+        id: recipe2.id,
+        name: recipe2.name,
+        ingredients: expect.any(Array),
+      });
+    });
+  });
+
+  describe('delete', () => {
+    const recipe = new Recipe({
+      id: uuid(),
+      name: 'Recipe 1',
+      ingredients: [
+        new IngredientAmount({
+          ingredient: 'Ingredient 1',
+          quantity: 1,
+        }),
+        new IngredientAmount({
+          ingredient: 'Ingredient 2',
+          quantity: 2,
+        }),
+      ],
+    });
+
+    let recipeResult: RecipeModel | null;
+
+    beforeAll(async () => {
+      await recipeIngredientModel.destroy({ where: {} });
+      await recipeModel.destroy({ where: {} });
+      await ingredientModel.destroy({ where: {} });
+      await recipeModel.create({
+        id: recipe.id,
+        name: recipe.name,
+      });
+      const createdIngredients = await ingredientModel.bulkCreate([
+        { id: uuid(), name: 'Ingredient 1' },
+        { id: uuid(), name: 'Ingredient 2' },
+      ]);
+      await recipeIngredientModel.bulkCreate([
+        {
+          id: uuid(),
+          recipeId: recipe.id,
+          ingredientId: createdIngredients[0].id,
+          amount: 1,
+        },
+        {
+          id: uuid(),
+          recipeId: recipe.id,
+          ingredientId: createdIngredients[1].id,
+          amount: 2,
+        },
+      ]);
+
+      await recipeRepository.delete(recipe.id);
+
+      recipeResult = await recipeModel.findByPk(recipe.id);
+    });
+
+    it('deletes the recipe', () => {
+      expect(recipeResult).toBeNull();
+    });
+  });
 });
