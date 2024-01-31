@@ -26,6 +26,9 @@ export class RecipeIngredientModel extends Model<
 
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+
+  declare ingredient?: IngredientModel;
+  declare recipe?: RecipeModel;
 }
 
 export type RecipeIngredientModelStatic = typeof RecipeIngredientModel;
@@ -67,23 +70,14 @@ async function initRecipeIngredientModel(
     },
     {
       sequelize,
-      modelName: 'recipe',
+      modelName: 'recipeIngredients',
       timestamps: false,
       underscored: true,
+      indexes: [{ fields: ['ingredient_id', 'recipe_id'], unique: true }],
     },
   );
 
-  RecipeIngredientModel.belongsTo(recipeModel, { foreignKey: 'recipeId' });
-  RecipeModel.hasMany(RecipeIngredientModel, { foreignKey: 'recipeId' });
-
-  RecipeIngredientModel.belongsTo(ingredientModel, {
-    foreignKey: 'ingredientId',
-  });
-  IngredientModel.hasMany(RecipeIngredientModel, {
-    foreignKey: 'ingredientId',
-  });
-
-  IngredientModel.belongsToMany(RecipeModel, {
+  ingredientModel.belongsToMany(recipeModel, {
     through: RecipeIngredientModel,
   });
 

@@ -34,6 +34,7 @@ async function initIngredientModel(sequelize: Sequelize) {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
       },
       amount: {
         type: DataTypes.INTEGER,
