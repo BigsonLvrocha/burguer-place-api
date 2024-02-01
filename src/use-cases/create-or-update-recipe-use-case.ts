@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { IngredientAmount } from 'domain/ingredient-amount.js';
-import { RecipeRepository } from 'domain/recipe-repository.js';
-import { Recipe } from 'domain/recipe.js';
+
+import { IngredientAmount, Recipe, RecipeRepository } from '../domain/index.js';
+
 import { UseCase } from './use-case.js';
 
 type CreateOrUpdateRecipeUseCaseRequest = {

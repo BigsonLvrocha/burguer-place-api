@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { Recipe } from 'domain/recipe.js';
-import { recipeRepositoryToken } from '../domain/recipe-repository.js';
+import { Recipe, recipeRepositoryToken } from '../domain/index.js';
 import { CreateOrUpdateRecipeUseCase } from './create-or-update-recipe-use-case.js';
 
 describe('CreateOrUpdateRecipeUseCase', () => {
