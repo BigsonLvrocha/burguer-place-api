@@ -7,8 +7,8 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { CreateOrUpdateRecipeUseCase } from '../../use-cases/create-or-update-recipe-use-case.js';
-import { CreateRecipeRequestDto } from './create-recipe.request.dto.js';
+import { CreateOrUpdateRecipeUseCase } from '../../../use-cases/create-or-update-recipe-use-case.js';
+import { CreateRecipeRequestDto } from '../dto/create-recipe.request.dto.js';
 
 @Controller('recipe')
 export class RecipeController {

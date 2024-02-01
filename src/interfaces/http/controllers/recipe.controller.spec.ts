@@ -2,7 +2,7 @@ import { jest } from '@jest/globals';
 import { Test, TestingModule } from '@nestjs/testing';
 import { v4 as uuid } from 'uuid';
 
-import { CreateOrUpdateRecipeUseCase } from '../../use-cases/create-or-update-recipe-use-case.js';
+import { CreateOrUpdateRecipeUseCase } from '../../../use-cases/create-or-update-recipe-use-case.js';
 
 import { RecipeController } from './recipe.controller.js';
 
