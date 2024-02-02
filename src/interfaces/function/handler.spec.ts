@@ -85,12 +85,18 @@ describe('lambda handler', () => {
               name: 'Pasta',
               ingredients: [
                 {
-                  name: 'Flour',
-                  amount: 1,
+                  type: 'ingredientAmount',
+                  attributes: {
+                    name: 'Flour',
+                    amount: 1,
+                  },
                 },
                 {
-                  name: 'Water',
-                  amount: 1,
+                  type: 'ingredientAmount',
+                  attributes: {
+                    name: 'Water',
+                    amount: 1,
+                  },
                 },
               ],
             },
@@ -133,12 +139,18 @@ describe('lambda handler', () => {
               name: 'Pasta',
               ingredients: expect.arrayContaining([
                 {
-                  name: 'Flour',
-                  amount: 1,
+                  type: 'ingredientAmount',
+                  attributes: {
+                    name: 'Flour',
+                    amount: 1,
+                  },
                 },
                 {
-                  name: 'Water',
-                  amount: 1,
+                  type: 'ingredientAmount',
+                  attributes: {
+                    name: 'Water',
+                    amount: 1,
+                  },
                 },
               ]),
             },
@@ -297,7 +309,12 @@ describe('lambda handler', () => {
             type: 'recipe',
             attributes: {
               name: 'Pasta',
-              ingredients: [{ name: 'Flour', amount: 3 }],
+              ingredients: [
+                {
+                  type: 'ingredientAmount',
+                  attributes: { name: 'Flour', amount: 3 },
+                },
+              ],
             },
           },
         });

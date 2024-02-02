@@ -84,8 +84,11 @@ describe('recipe controller', () => {
             name: 'Recipe Name',
             ingredients: [
               {
-                name: 'Ingredient',
-                amount: 1,
+                type: 'ingredientAmount' as const,
+                attributes: {
+                  name: 'Ingredient',
+                  amount: 1,
+                },
               },
             ],
           },
@@ -95,7 +98,9 @@ describe('recipe controller', () => {
       mockCreateOrUpdateUseCase.execute.mockResolvedValue({
         id: recipeId,
         name: request.data.attributes.name,
-        ingredients: request.data.attributes.ingredients,
+        ingredients: request.data.attributes.ingredients.map(
+          (ingredient) => ingredient.attributes,
+        ),
       });
 
       const response = await controller.create(request);
@@ -103,7 +108,9 @@ describe('recipe controller', () => {
       expect(mockCreateOrUpdateUseCase.execute).toHaveBeenCalledTimes(1);
       expect(mockCreateOrUpdateUseCase.execute).toHaveBeenCalledWith({
         name: request.data.attributes.name,
-        ingredients: request.data.attributes.ingredients,
+        ingredients: request.data.attributes.ingredients.map(
+          (ingredient) => ingredient.attributes,
+        ),
       });
 
       expect(response).toEqual({
@@ -112,7 +119,15 @@ describe('recipe controller', () => {
           id: recipeId,
           attributes: {
             name: request.data.attributes.name,
-            ingredients: request.data.attributes.ingredients,
+            ingredients: request.data.attributes.ingredients.map(
+              (ingredient) => ({
+                type: 'ingredientAmount',
+                attributes: {
+                  name: ingredient.attributes.name,
+                  amount: ingredient.attributes.amount,
+                },
+              }),
+            ),
           },
         },
       });
@@ -147,8 +162,11 @@ describe('recipe controller', () => {
               name: 'Recipe Name',
               ingredients: [
                 {
-                  name: 'Ingredient',
-                  amount: 1,
+                  type: 'ingredientAmount',
+                  attributes: {
+                    name: 'Ingredient',
+                    amount: 1,
+                  },
                 },
               ],
             },
@@ -187,8 +205,11 @@ describe('recipe controller', () => {
             name: 'Recipe Name',
             ingredients: [
               {
-                name: 'Ingredient',
-                amount: 1,
+                type: 'ingredientAmount',
+                attributes: {
+                  name: 'Ingredient',
+                  amount: 1,
+                },
               },
             ],
           },

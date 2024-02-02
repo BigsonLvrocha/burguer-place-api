@@ -3,24 +3,12 @@ import {
   ArrayMinSize,
   IsArray,
   IsEnum,
-  IsInt,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsUUID,
-  Min,
   ValidateNested,
 } from 'class-validator';
-
-class IngredientAmountDto {
-  @IsNotEmpty()
-  name: string;
-
-  @Min(1)
-  @IsNumber()
-  @IsInt()
-  amount: number;
-}
+import { IngredientAmountDto } from './ingredient-amount.dto.js';
 
 class RecipeAttributesDto {
   @IsNotEmpty()

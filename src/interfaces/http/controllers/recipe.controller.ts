@@ -37,7 +37,10 @@ export class RecipeController {
     const recipeToCreate = {
       id: body.data.id,
       name: body.data.attributes.name,
-      ingredients: body.data.attributes.ingredients,
+      ingredients: body.data.attributes.ingredients.map((ingredient) => ({
+        name: ingredient.attributes.name,
+        amount: ingredient.attributes.amount,
+      })),
     };
 
     const data = await this.createOrUpdateRecipeUseCase.execute(recipeToCreate);
@@ -47,7 +50,13 @@ export class RecipeController {
         id: data.id,
         attributes: {
           name: data.name,
-          ingredients: data.ingredients,
+          ingredients: data.ingredients.map((ingredient) => ({
+            type: 'ingredientAmount',
+            attributes: {
+              name: ingredient.name,
+              amount: ingredient.amount,
+            },
+          })),
         },
       },
     };
@@ -64,7 +73,13 @@ export class RecipeController {
         id: recipe.id,
         attributes: {
           name: recipe.name,
-          ingredients: recipe.ingredients,
+          ingredients: recipe.ingredients.map((ingredient) => ({
+            type: 'ingredientAmount',
+            attributes: {
+              name: ingredient.name,
+              amount: ingredient.amount,
+            },
+          })),
         },
       })),
     };
@@ -86,7 +101,13 @@ export class RecipeController {
         id: data.id,
         attributes: {
           name: data.name,
-          ingredients: data.ingredients,
+          ingredients: data.ingredients.map((ingredient) => ({
+            type: 'ingredientAmount',
+            attributes: {
+              name: ingredient.name,
+              amount: ingredient.amount,
+            },
+          })),
         },
       },
     };
