@@ -1,6 +1,7 @@
+import { jest } from '@jest/globals';
 import { Test, TestingModule } from '@nestjs/testing';
-import { IngredientAmount } from 'domain/ingredient-amount.js';
-import { ingredientStorageServiceToken } from 'domain/ingredient-storage-service.js';
+import { IngredientAmount } from '../domain/ingredient-amount.js';
+import { ingredientStorageServiceToken } from '../domain/ingredient-storage-service.js';
 import { UpdateIngredientAmountUseCase } from './update-ingredient-amount-use-case.js';
 
 describe('UpdateIngredientAmountUseCase', () => {
@@ -15,8 +16,7 @@ describe('UpdateIngredientAmountUseCase', () => {
         {
           provide: ingredientStorageServiceToken,
           useValue: {
-            get: jest.fn(),
-            update: jest.fn(),
+            updateIngredientAmount: jest.fn(),
           },
         },
       ],

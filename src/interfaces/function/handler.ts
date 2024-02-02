@@ -25,13 +25,7 @@ export async function initHandler() {
 
   await nestApp.init();
 
-  const baseHandler = configure({ app: expressApp });
-
-  const handler = async (event: any, context: any, cb: any) => {
-    console.log('event', event);
-    const result = await baseHandler(event, context, cb);
-    return result;
-  };
+  const handler = configure({ app: expressApp });
 
   return {
     expressApp,
