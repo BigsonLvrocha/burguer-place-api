@@ -1,10 +1,20 @@
-import { Body, Controller, Get, Header, HttpCode, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Header,
+  HttpCode,
+  Post,
+  UseFilters,
+} from '@nestjs/common';
 import {
   CreateOrUpdateRecipeUseCase,
   ListRecipesUseCase,
 } from '../../../use-cases/index.js';
 import { CreateRecipeRequestDto } from '../dto/create-recipe.request.dto.js';
+import { AllExceptionsFilter } from './exception-handler.js';
 
+@UseFilters(AllExceptionsFilter)
 @Controller('recipe')
 export class RecipeController {
   constructor(

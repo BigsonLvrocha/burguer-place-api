@@ -183,5 +183,39 @@ describe('lambda handler', () => {
         );
       });
     });
+
+    describe('create new recipe with invalid input', () => {
+      const request = buildHttpLambdaRequest({
+        path: '/recipe',
+        method: 'POST',
+        body: {
+          data: {
+            type: 'recipe',
+            attributes: {
+              name: 'Pasta',
+              ingredients: [],
+            },
+          },
+        },
+      });
+
+      let response: any;
+      let responseBody: any;
+
+      beforeAll(async () => {
+        response = await handler(request, lambdaContext, null);
+        responseBody = JSON.parse(response.body);
+      });
+
+      it('returns 400 status code', () => {
+        expect(response.statusCode).toBe(400);
+      });
+
+      it('returns the error message', () => {
+        expect(responseBody).toMatchObject({
+          errors: expect.any(Array),
+        });
+      });
+    });
   });
 });
