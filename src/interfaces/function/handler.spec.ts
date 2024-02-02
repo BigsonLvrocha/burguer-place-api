@@ -218,4 +218,37 @@ describe('lambda handler', () => {
       });
     });
   });
+
+  describe('GET /recipes', () => {
+    describe('list no recipes', () => {
+      beforeAll(async () => {
+        await recipeIngredientModel.destroy({ where: {} });
+        await recipeModel.destroy({ where: {} });
+      });
+
+      const request = buildHttpLambdaRequest({
+        path: '/recipe',
+        method: 'GET',
+        body: {},
+      });
+
+      let response: any;
+      let responseBody: any;
+
+      beforeAll(async () => {
+        response = await handler(request, lambdaContext, null);
+        responseBody = JSON.parse(response.body);
+      });
+
+      it('returns 200 status code', () => {
+        expect(response.statusCode).toBe(200);
+      });
+
+      it('returns the list of recipes', () => {
+        expect(responseBody).toMatchObject({
+          data: expect.any(Array),
+        });
+      });
+    });
+  });
 });
