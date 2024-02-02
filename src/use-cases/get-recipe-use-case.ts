@@ -28,7 +28,7 @@ export class GetRecipeUseCase
     const recipe = await this.recipeRepository.get(request.id);
 
     if (!recipe) {
-      null;
+      return null;
     }
 
     return {

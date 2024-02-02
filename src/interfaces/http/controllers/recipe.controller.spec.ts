@@ -4,6 +4,7 @@ import { v4 as uuid } from 'uuid';
 
 import {
   CreateOrUpdateRecipeUseCase,
+  GetRecipeUseCase,
   ListRecipesUseCase,
 } from '../../../use-cases/index.js';
 
@@ -13,6 +14,7 @@ describe('recipe controller', () => {
   let testingModule: TestingModule;
   let mockCreateOrUpdateUseCase: { execute: jest.Mock<any> };
   let mockListRecipesUseCase: { execute: jest.Mock<any> };
+  let mockGetRecipeUseCase: { execute: jest.Mock<any> };
   let controller: RecipeController;
 
   beforeAll(async () => {
@@ -30,17 +32,24 @@ describe('recipe controller', () => {
             execute: jest.fn(),
           },
         },
+        {
+          provide: GetRecipeUseCase,
+          useValue: {
+            execute: jest.fn(),
+          },
+        },
         RecipeController,
       ],
     }).compile();
 
     mockCreateOrUpdateUseCase = testingModule.get(CreateOrUpdateRecipeUseCase);
     mockListRecipesUseCase = testingModule.get(ListRecipesUseCase);
+    mockGetRecipeUseCase = testingModule.get(GetRecipeUseCase);
     controller = testingModule.get(RecipeController);
   });
 
   beforeEach(() => {
-    mockCreateOrUpdateUseCase.execute.mockReset();
+    jest.resetAllMocks();
   });
 
   afterAll(async () => {
@@ -128,6 +137,53 @@ describe('recipe controller', () => {
           },
         ],
       });
+    });
+  });
+
+  describe('get', () => {
+    it('should call use case with the correct parameters', async () => {
+      const recipeId = uuid();
+      mockGetRecipeUseCase.execute.mockResolvedValue({
+        id: recipeId,
+        name: 'Recipe Name',
+        ingredients: [
+          {
+            name: 'Ingredient',
+            amount: 1,
+          },
+        ],
+      });
+
+      const response = await controller.get(recipeId);
+
+      expect(mockGetRecipeUseCase.execute).toHaveBeenCalledTimes(1);
+      expect(mockGetRecipeUseCase.execute).toHaveBeenCalledWith({
+        id: recipeId,
+      });
+
+      expect(response).toEqual({
+        data: {
+          type: 'recipe',
+          id: recipeId,
+          attributes: {
+            name: 'Recipe Name',
+            ingredients: [
+              {
+                name: 'Ingredient',
+                amount: 1,
+              },
+            ],
+          },
+        },
+      });
+    });
+
+    it('should return an empty object if the recipe does not exist', async () => {
+      mockGetRecipeUseCase.execute.mockResolvedValue(null);
+
+      const response = await controller.get(uuid());
+
+      expect(response).toEqual({ data: {} });
     });
   });
 });

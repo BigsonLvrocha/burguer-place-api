@@ -12,6 +12,4 @@ export const config = {
   },
 };
 
-console.log(config);
-
 export type Config = typeof config;

@@ -57,26 +57,30 @@ const commonContext = {
 
 export const buildHttpLambdaRequest = ({
   path,
+  resourcePath = path,
   method,
   body,
+  pathParameters = {},
 }: {
   path: string;
+  resourcePath?: string;
   method: string;
   body: any;
+  pathParameters?: Record<string, string>;
 }) => ({
   body: JSON.stringify(body),
-  resource: '/{proxy+}',
+  resource: resourcePath,
   path,
   httpMethod: method,
   isBase64Encoded: false,
   queryStringParameters: {},
-  pathParameters: {},
+  pathParameters,
   stageVariables: {},
   headers,
   multiValueHeaders,
   requestContext: {
     ...commonContext,
-    path: `/prod${path}`,
+    path: `/prod${resourcePath}`,
     httpMethod: method,
   },
 });

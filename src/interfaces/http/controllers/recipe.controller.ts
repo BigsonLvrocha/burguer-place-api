@@ -4,11 +4,13 @@ import {
   Get,
   Header,
   HttpCode,
+  Param,
   Post,
   UseFilters,
 } from '@nestjs/common';
 import {
   CreateOrUpdateRecipeUseCase,
+  GetRecipeUseCase,
   ListRecipesUseCase,
 } from '../../../use-cases/index.js';
 import { CreateRecipeRequestDto } from '../dto/create-recipe.request.dto.js';
@@ -20,6 +22,7 @@ export class RecipeController {
   constructor(
     private readonly createOrUpdateRecipeUseCase: CreateOrUpdateRecipeUseCase,
     private readonly listRecipesUseCase: ListRecipesUseCase,
+    private readonly getRecipeUseCase: GetRecipeUseCase,
   ) {}
 
   @Post()
@@ -59,6 +62,28 @@ export class RecipeController {
           ingredients: recipe.ingredients,
         },
       })),
+    };
+  }
+
+  @Get(':id')
+  @HttpCode(200)
+  @Header('Content-Type', 'application/vnd.api+json')
+  async get(@Param('id') id: string) {
+    const data = await this.getRecipeUseCase.execute({ id });
+
+    if (data === null || data === undefined) {
+      return { data: {} };
+    }
+
+    return {
+      data: {
+        type: 'recipe',
+        id: data.id,
+        attributes: {
+          name: data.name,
+          ingredients: data.ingredients,
+        },
+      },
     };
   }
 }

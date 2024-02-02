@@ -109,8 +109,6 @@ describe('lambda handler', () => {
         response = await handler(request, lambdaContext, null);
         responseBody = JSON.parse(response.body);
 
-        console.log(response);
-        console.log(responseBody);
         createdRecipe = await recipeModel.findByPk(responseBody.data.id);
 
         createdRecipeIngredients = await recipeIngredientModel.findAll({
@@ -247,6 +245,90 @@ describe('lambda handler', () => {
       it('returns the list of recipes', () => {
         expect(responseBody).toMatchObject({
           data: expect.any(Array),
+        });
+      });
+    });
+  });
+
+  describe('Get /recipes/{id}', () => {
+    describe('when recipe exists', () => {
+      const recipeId = uuid();
+      const request = buildHttpLambdaRequest({
+        resourcePath: '/recipe/{id}',
+        path: `/recipe/${recipeId}`,
+        method: 'GET',
+        body: {},
+        pathParameters: { id: recipeId },
+      });
+
+      let response: any;
+      let responseBody: any;
+
+      beforeAll(async () => {
+        await recipeModel.create({
+          id: recipeId,
+          name: 'Pasta',
+        });
+
+        const [ingredient] = await ingredientModel.findOrCreate({
+          where: {
+            name: 'Flour',
+          },
+        });
+
+        await recipeIngredientModel.create({
+          recipeId,
+          ingredientId: ingredient.id,
+          amount: 3,
+        });
+
+        response = await handler(request, lambdaContext, null);
+        responseBody = JSON.parse(response.body);
+      });
+
+      it('returns 200 status code', () => {
+        expect(response.statusCode).toBe(200);
+      });
+
+      it('returns the recipe', () => {
+        expect(responseBody).toMatchObject({
+          data: {
+            id: recipeId,
+            type: 'recipe',
+            attributes: {
+              name: 'Pasta',
+              ingredients: [{ name: 'Flour', amount: 3 }],
+            },
+          },
+        });
+      });
+    });
+
+    describe('when recipe does not exist', () => {
+      const recipeId = uuid();
+      const request = buildHttpLambdaRequest({
+        resourcePath: '/recipe/{id}',
+        path: `/recipe/${recipeId}`,
+        method: 'GET',
+        body: {},
+        pathParameters: { id: recipeId },
+      });
+
+      let response: any;
+      let responseBody: any;
+
+      beforeAll(async () => {
+        response = await handler(request, lambdaContext, null);
+        responseBody = JSON.parse(response.body);
+      });
+
+      it('returns 200 status code', () => {
+        expect(response.statusCode).toBe(200);
+      });
+
+      it('returns the recipe', () => {
+        expect(responseBody).toMatchObject({
+          data: {},
         });
       });
     });
