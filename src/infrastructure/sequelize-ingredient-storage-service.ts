@@ -4,6 +4,7 @@ import {
   IngredientStorageService,
   Recipe,
 } from '../domain//index.js';
+import { NotEnoughIngredientsException } from '../domain/errors/not-enough-ingredients-exceptions.js';
 import { IngredientModelStatic, ingredientModelToken } from './db/index.js';
 
 @Injectable()
@@ -34,7 +35,33 @@ export class SequelizeIngredientStorageService
     return new IngredientAmount({ ingredient, quantity: data.amount });
   }
 
-  processRecipe(recipe: Recipe): Promise<void> {
-    throw new Error('Method not implemented.');
+  async processRecipe(recipe: Recipe): Promise<void> {
+    await this.ingredientModel.sequelize?.transaction(async (transaction) => {
+      const ingredients = await this.ingredientModel.findAll({
+        where: {
+          name: recipe.ingredients.map((i) => i.ingredient),
+        },
+        transaction,
+      });
+
+      if (ingredients.length !== recipe.ingredients.length) {
+        throw new NotEnoughIngredientsException();
+      }
+
+      const ingredientsAmountMap = new Map(
+        recipe.ingredients.map((i) => [i.ingredient, i.quantity]),
+      );
+
+      for (const ingredient of ingredients) {
+        const newAmount =
+          ingredient.amount - (ingredientsAmountMap.get(ingredient.name) ?? 0);
+
+        if (newAmount < 0) {
+          throw new NotEnoughIngredientsException();
+        }
+
+        await ingredient.update({ amount: newAmount }, { transaction });
+      }
+    });
   }
 }

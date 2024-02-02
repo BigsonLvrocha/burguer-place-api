@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 
 import { ConfigModule } from '@nestjs/config';
 import { config } from '../config.js';
-import { IngredientAmount } from '../domain/index.js';
+import { IngredientAmount, Recipe } from '../domain/index.js';
 import {
   DbModule,
   IngredientModelStatic,
@@ -141,6 +141,80 @@ describe('SequelizeIngredientStorageService', () => {
         expect(result).toEqual(
           new IngredientAmount({ ingredient: ingredientName, quantity: 1 }),
         );
+      });
+    });
+  });
+
+  describe('processRecipe', () => {
+    describe('when all ingredients are available', () => {
+      it('should update the ingredient amounts', async () => {
+        const ingredientName = `element-${uuid()}`;
+
+        await ingredientModel.create({
+          name: ingredientName,
+          amount: 1,
+        });
+
+        await service.processRecipe(
+          new Recipe({
+            name: 'recipe',
+            ingredients: [
+              new IngredientAmount({ ingredient: ingredientName, quantity: 1 }),
+            ],
+          }),
+        );
+
+        const ingredient = await ingredientModel.findOne({
+          where: { name: ingredientName },
+        });
+
+        expect(ingredient).not.toBeNull();
+        expect(ingredient?.amount).toBe(0);
+      });
+    });
+
+    describe('when an ingredient is not available', () => {
+      it('should throw an error', async () => {
+        const ingredientName = `element-${uuid()}`;
+
+        await ingredientModel.create({
+          name: ingredientName,
+          amount: 0,
+        });
+
+        await expect(
+          service.processRecipe(
+            new Recipe({
+              name: 'recipe',
+              ingredients: [
+                new IngredientAmount({
+                  ingredient: ingredientName,
+                  quantity: 1,
+                }),
+              ],
+            }),
+          ),
+        ).rejects.toThrow('Not enough ingredients');
+      });
+    });
+
+    describe('when an ingredient is not in database', () => {
+      it('should throw an error', async () => {
+        const ingredientName = `element-${uuid()}`;
+
+        await expect(
+          service.processRecipe(
+            new Recipe({
+              name: 'recipe',
+              ingredients: [
+                new IngredientAmount({
+                  ingredient: ingredientName,
+                  quantity: 1,
+                }),
+              ],
+            }),
+          ),
+        ).rejects.toThrow('Not enough ingredients');
       });
     });
   });

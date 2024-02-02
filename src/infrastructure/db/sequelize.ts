@@ -8,11 +8,11 @@ async function createSequelize(config: ConfigService) {
 
   const sequelize = new Sequelize({
     dialect: 'postgres',
-    port: databaseConfig.port,
-    host: databaseConfig.host,
-    username: databaseConfig.user,
-    password: databaseConfig.pass,
-    database: databaseConfig.name,
+    port: databaseConfig?.port,
+    host: databaseConfig?.host,
+    username: databaseConfig?.user,
+    password: databaseConfig?.pass,
+    database: databaseConfig?.name,
     logging: false,
   });
 
