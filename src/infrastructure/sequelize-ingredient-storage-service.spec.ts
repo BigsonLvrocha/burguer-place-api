@@ -218,4 +218,31 @@ describe('SequelizeIngredientStorageService', () => {
       });
     });
   });
+
+  describe('listIngredients', () => {
+    let ingredientsResult: IngredientAmount[];
+
+    beforeAll(async () => {
+      await ingredientModel.destroy({ where: {} });
+      await ingredientModel.bulkCreate([
+        { name: 'Ingredient 1' },
+        { name: 'Ingredient 2' },
+      ]);
+
+      ingredientsResult = await service.listIngredients();
+    });
+
+    it('returns the ingredients', () => {
+      expect(ingredientsResult).toHaveLength(2);
+    });
+
+    it('returns the ingredients with correct names', () => {
+      expect(ingredientsResult).toContainEqual(
+        new IngredientAmount({ ingredient: 'Ingredient 1', quantity: 0 }),
+      );
+      expect(ingredientsResult).toContainEqual(
+        new IngredientAmount({ ingredient: 'Ingredient 2', quantity: 0 }),
+      );
+    });
+  });
 });

@@ -64,4 +64,11 @@ export class SequelizeIngredientStorageService
       }
     });
   }
+
+  async listIngredients(): Promise<IngredientAmount[]> {
+    const ingredients = await this.ingredientModel.findAll();
+    return ingredients.map(
+      (i) => new IngredientAmount({ ingredient: i.name, quantity: i.amount }),
+    );
+  }
 }
