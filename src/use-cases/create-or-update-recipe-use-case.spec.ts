@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { Recipe, recipeRepositoryToken } from '../domain/index.js';
@@ -5,7 +6,7 @@ import { CreateOrUpdateRecipeUseCase } from './create-or-update-recipe-use-case.
 
 describe('CreateOrUpdateRecipeUseCase', () => {
   let testModule: TestingModule;
-  let recipeRepository: { save: jest.Mock };
+  let recipeRepository: { save: jest.Mock<any> };
   let useCase: CreateOrUpdateRecipeUseCase;
 
   beforeAll(async () => {
@@ -45,7 +46,7 @@ describe('CreateOrUpdateRecipeUseCase', () => {
     });
 
     expect(recipeRepository.save).toHaveBeenCalledTimes(1);
-    const recipe = recipeRepository.save.mock.calls[0][0];
+    const recipe: any = recipeRepository.save.mock.calls[0][0];
 
     expect(recipe).toBeInstanceOf(Recipe);
     expect(recipe.name).toBe('Recipe Name');

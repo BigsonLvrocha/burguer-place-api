@@ -4,6 +4,7 @@ import { v4 as uuid } from 'uuid';
 
 import {
   CreateOrUpdateRecipeUseCase,
+  DeleteRecipeUseCase,
   GetRecipeUseCase,
   ListRecipesUseCase,
 } from '../../../use-cases/index.js';
@@ -15,6 +16,7 @@ describe('recipe controller', () => {
   let mockCreateOrUpdateUseCase: { execute: jest.Mock<any> };
   let mockListRecipesUseCase: { execute: jest.Mock<any> };
   let mockGetRecipeUseCase: { execute: jest.Mock<any> };
+  let mockDeleteRecipeUseCase: { execute: jest.Mock<any> };
   let controller: RecipeController;
 
   beforeAll(async () => {
@@ -38,6 +40,12 @@ describe('recipe controller', () => {
             execute: jest.fn(),
           },
         },
+        {
+          provide: DeleteRecipeUseCase,
+          useValue: {
+            execute: jest.fn(),
+          },
+        },
         RecipeController,
       ],
     }).compile();
@@ -45,6 +53,7 @@ describe('recipe controller', () => {
     mockCreateOrUpdateUseCase = testingModule.get(CreateOrUpdateRecipeUseCase);
     mockListRecipesUseCase = testingModule.get(ListRecipesUseCase);
     mockGetRecipeUseCase = testingModule.get(GetRecipeUseCase);
+    mockDeleteRecipeUseCase = testingModule.get(DeleteRecipeUseCase);
     controller = testingModule.get(RecipeController);
   });
 
@@ -193,8 +202,8 @@ describe('recipe controller', () => {
 
       await controller.delete(recipeId);
 
-      expect(mockCreateOrUpdateUseCase.execute).toHaveBeenCalledTimes(1);
-      expect(mockCreateOrUpdateUseCase.execute).toHaveBeenCalledWith({
+      expect(mockDeleteRecipeUseCase.execute).toHaveBeenCalledTimes(1);
+      expect(mockDeleteRecipeUseCase.execute).toHaveBeenCalledWith({
         id: recipeId,
       });
     });

@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   IngredientAmount,
@@ -8,7 +9,7 @@ import { GetRecipeUseCase } from './get-recipe-use-case.js';
 
 describe('GetRecipeUseCase', () => {
   let testModule: TestingModule;
-  let recipeRepository: { find: jest.Mock };
+  let recipeRepository: { get: jest.Mock<any> };
   let useCase: GetRecipeUseCase;
 
   beforeAll(async () => {
@@ -17,7 +18,7 @@ describe('GetRecipeUseCase', () => {
         {
           provide: recipeRepositoryToken,
           useValue: {
-            find: jest.fn(),
+            get: jest.fn(),
           },
         },
         GetRecipeUseCase,
@@ -29,7 +30,7 @@ describe('GetRecipeUseCase', () => {
   });
 
   beforeEach(() => {
-    recipeRepository.find.mockReset();
+    recipeRepository.get.mockReset();
   });
 
   afterAll(async () => {
@@ -37,7 +38,7 @@ describe('GetRecipeUseCase', () => {
   });
 
   it('returns the recipe via repository', async () => {
-    recipeRepository.find.mockResolvedValue(
+    recipeRepository.get.mockResolvedValue(
       new Recipe({
         id: 'RecipeId',
         name: 'Recipe Name',
