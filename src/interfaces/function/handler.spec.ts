@@ -572,4 +572,95 @@ describe('lambda handler', () => {
       });
     });
   });
+
+  describe('POST /ingredient-amount', () => {
+    describe('create new ingredient with valid input', () => {
+      const request = buildHttpLambdaRequest({
+        path: '/ingredient-amount',
+        method: 'POST',
+        body: {
+          data: {
+            type: 'ingredientAmount',
+            attributes: {
+              name: 'Flour',
+              amount: 234,
+            },
+          },
+        },
+      });
+
+      let response: any;
+      let responseBody: any;
+
+      let updatedIngredient: IngredientModel | null;
+
+      beforeAll(async () => {
+        response = await handler(request, lambdaContext, jest.fn());
+        responseBody = JSON.parse(response.body);
+
+        updatedIngredient = await ingredientModel.findOne({
+          where: { name: 'Flour' },
+        });
+      });
+
+      it('returns 200 status code', () => {
+        expect(response.statusCode).toBe(200);
+      });
+
+      it('returns the updated ingredient', () => {
+        expect(responseBody).toMatchObject({
+          data: {
+            type: 'ingredientAmount',
+            attributes: {
+              name: 'Flour',
+              amount: 234,
+            },
+          },
+        });
+      });
+
+      it('creates the ingredient in the database', () => {
+        expect(updatedIngredient).not.toBeNull();
+      });
+
+      it('creates the ingredient with the data passed', () => {
+        expect(updatedIngredient?.name).toBe('Flour');
+        expect(updatedIngredient?.amount).toBe(234);
+      });
+    });
+
+    describe('create new ingredient with invalid input', () => {
+      const request = buildHttpLambdaRequest({
+        path: '/ingredient-amount',
+        method: 'POST',
+        body: {
+          data: {
+            type: 'ingredientAmount',
+            attributes: {
+              name: 'Flour',
+              amount: -1,
+            },
+          },
+        },
+      });
+
+      let response: any;
+      let responseBody: any;
+
+      beforeAll(async () => {
+        response = await handler(request, lambdaContext, jest.fn());
+        responseBody = JSON.parse(response.body);
+      });
+
+      it('returns 400 status code', () => {
+        expect(response.statusCode).toBe(400);
+      });
+
+      it('returns the error message', () => {
+        expect(responseBody).toMatchObject({
+          errors: expect.any(Array),
+        });
+      });
+    });
+  });
 });
