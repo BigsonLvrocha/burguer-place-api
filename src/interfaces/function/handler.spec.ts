@@ -333,4 +333,65 @@ describe('lambda handler', () => {
       });
     });
   });
+
+  describe('DELETE /recipes/{id}', () => {
+    describe('when recipe exists', () => {
+      const recipeId = uuid();
+      const request = buildHttpLambdaRequest({
+        resourcePath: '/recipe/{id}',
+        path: `/recipe/${recipeId}`,
+        method: 'DELETE',
+        body: {},
+        pathParameters: { id: recipeId },
+      });
+
+      let response: any;
+
+      beforeAll(async () => {
+        await recipeModel.create({
+          id: recipeId,
+          name: 'White Pasta',
+        });
+
+        const [ingredient] = await ingredientModel.findOrCreate({
+          where: {
+            name: 'White Flour',
+          },
+        });
+
+        await recipeIngredientModel.create({
+          recipeId,
+          ingredientId: ingredient.id,
+          amount: 3,
+        });
+
+        response = await handler(request, lambdaContext, null);
+      });
+
+      it('returns 200 status code', () => {
+        expect(response.statusCode).toBe(200);
+      });
+    });
+
+    describe('when recipe does not exist', () => {
+      const recipeId = uuid();
+      const request = buildHttpLambdaRequest({
+        resourcePath: '/recipe/{id}',
+        path: `/recipe/${recipeId}`,
+        method: 'DELETE',
+        body: {},
+        pathParameters: { id: recipeId },
+      });
+
+      let response: any;
+
+      beforeAll(async () => {
+        response = await handler(request, lambdaContext, null);
+      });
+
+      it('returns 404 status code', () => {
+        expect(response.statusCode).toBe(404);
+      });
+    });
+  });
 });

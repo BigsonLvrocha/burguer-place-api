@@ -48,6 +48,11 @@ Resources:
           Properties:
             Path: /recipe/{id}
             Method: get
+        DeleteRecipe:
+          Type: Api
+          Properties:
+            Path: /recipe/{id}
+            Method: delete
       Environment:
         Variables:
           DB_HOST: !GetAtt BurguerDBInstance.Endpoint.Address

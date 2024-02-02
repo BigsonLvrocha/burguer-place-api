@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Header,
   HttpCode,
@@ -10,6 +11,7 @@ import {
 } from '@nestjs/common';
 import {
   CreateOrUpdateRecipeUseCase,
+  DeleteRecipeUseCase,
   GetRecipeUseCase,
   ListRecipesUseCase,
 } from '../../../use-cases/index.js';
@@ -23,6 +25,7 @@ export class RecipeController {
     private readonly createOrUpdateRecipeUseCase: CreateOrUpdateRecipeUseCase,
     private readonly listRecipesUseCase: ListRecipesUseCase,
     private readonly getRecipeUseCase: GetRecipeUseCase,
+    private readonly deleteRecipeUseCase: DeleteRecipeUseCase,
   ) {}
 
   @Post()
@@ -85,5 +88,14 @@ export class RecipeController {
         },
       },
     };
+  }
+
+  @Delete(':id')
+  @HttpCode(200)
+  @Header('Content-Type', 'application/vnd.api+json')
+  async delete(@Param('id') id: string) {
+    await this.deleteRecipeUseCase.execute({
+      id,
+    });
   }
 }

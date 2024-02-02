@@ -186,4 +186,17 @@ describe('recipe controller', () => {
       expect(response).toEqual({ data: {} });
     });
   });
+
+  describe('delete', () => {
+    it('should call use case with the correct parameters', async () => {
+      const recipeId = uuid();
+
+      await controller.delete(recipeId);
+
+      expect(mockCreateOrUpdateUseCase.execute).toHaveBeenCalledTimes(1);
+      expect(mockCreateOrUpdateUseCase.execute).toHaveBeenCalledWith({
+        id: recipeId,
+      });
+    });
+  });
 });
