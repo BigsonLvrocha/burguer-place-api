@@ -76,6 +76,10 @@ Resources:
           DB_USER: !GetAtt BurguerDBInstance.MasterUsername
           DB_PASS_ARN: !GetAtt BurguerDBInstance.MasterUserSecret.SecretArn
           DB_PASS:
+      Policies:
+        - AWSSecretsManagerGetSecretValuePolicy:
+            SecretArn: !GetAtt BurguerDBInstance.MasterUserSecret.SecretArn
+        
 
     Metadata: # Manage docker metadata
       DockerContext: .

@@ -9,6 +9,10 @@ export const config = {
     user: process.env.DB_USER ?? 'flipper',
     name: process.env.DB_NAME ?? 'burguer',
     pass: process.env.DB_PASS ?? 'postgres',
+    passArn: process.env.DB_PASS_ARN,
+  },
+  aws: {
+    region: process.env.AWS_REGION,
   },
 };
 
