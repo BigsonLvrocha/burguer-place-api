@@ -11,7 +11,7 @@ export class IngredientAmount {
   public readonly quantity: number;
 
   constructor(props: IngredientAmountProps) {
-    if (props.quantity <= 0)
+    if (props.quantity < 0)
       throw new InvalidIngredientQuantityException(
         props.ingredient,
         props.quantity,

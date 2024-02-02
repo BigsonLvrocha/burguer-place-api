@@ -14,9 +14,9 @@ describe('ingredient amount', () => {
     expect(ingredientAmount.quantity).toBe(1);
   });
 
-  it('throws an error if the quantity is less than or equal to 0', () => {
+  it('throws an error if the quantity is less than 0', () => {
     expect(
-      () => new IngredientAmount({ ingredient: 'cheese', quantity: 0 }),
+      () => new IngredientAmount({ ingredient: 'cheese', quantity: -1 }),
     ).toThrow(InvalidIngredientQuantityException);
   });
 
