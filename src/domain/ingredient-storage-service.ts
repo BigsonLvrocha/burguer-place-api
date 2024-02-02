@@ -10,3 +10,5 @@ export interface IngredientStorageService {
 
   processRecipe(recipe: Recipe): Promise<void>;
 }
+
+export const ingredientStorageServiceToken = Symbol('IngredientStorageService');

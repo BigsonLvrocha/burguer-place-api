@@ -1,5 +1,8 @@
 export { IngredientAmount } from './ingredient-amount.js';
-export { IngredientStorageService } from './ingredient-storage-service.js';
+export {
+  IngredientStorageService,
+  ingredientStorageServiceToken,
+} from './ingredient-storage-service.js';
 export {
   RecipeRepository,
   recipeRepositoryToken,
