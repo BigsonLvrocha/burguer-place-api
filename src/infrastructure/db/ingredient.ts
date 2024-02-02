@@ -17,7 +17,7 @@ export class IngredientModel extends Model<
 > {
   declare id: CreationOptional<string>;
   declare name: string;
-  declare amount: number;
+  declare amount: CreationOptional<number>;
 
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;

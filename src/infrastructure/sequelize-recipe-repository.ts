@@ -44,7 +44,7 @@ export class SequelizeRecipeRepository implements RecipeRepository {
   }
 
   async save(recipe: Recipe): Promise<void> {
-    await this.recipeModel.sequelize.transaction(async (transaction) => {
+    await this.recipeModel.sequelize?.transaction(async (transaction) => {
       const [createdRecipe] = await this.recipeModel.upsert(
         {
           id: recipe.id,
@@ -58,7 +58,7 @@ export class SequelizeRecipeRepository implements RecipeRepository {
   }
 
   async delete(recipeId: string): Promise<void> {
-    await this.recipeModel.sequelize.transaction(async (transaction) => {
+    await this.recipeModel.sequelize?.transaction(async (transaction) => {
       await this.recipeIngredientModel.destroy({
         where: { recipeId: recipeId },
         transaction,
@@ -153,14 +153,15 @@ export class SequelizeRecipeRepository implements RecipeRepository {
   }
 
   private adaptRecipeModelToRecipe(recipeModel: RecipeModel): Recipe {
-    const ingredients = recipeModel.ingredients.map((ingredientModel) => {
-      const ingredientAmount = new IngredientAmount({
-        ingredient: ingredientModel.name,
-        quantity: ingredientModel.recipeIngredients.amount,
-      });
+    const ingredients =
+      recipeModel.ingredients?.map((ingredientModel) => {
+        const ingredientAmount = new IngredientAmount({
+          ingredient: ingredientModel.name,
+          quantity: ingredientModel.recipeIngredients?.amount ?? 0,
+        });
 
-      return ingredientAmount;
-    });
+        return ingredientAmount;
+      }) ?? [];
 
     const recipe = new Recipe({
       id: recipeModel.id,

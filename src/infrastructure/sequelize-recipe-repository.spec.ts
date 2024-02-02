@@ -176,12 +176,12 @@ describe('SequelizeRecipeRepository', () => {
           const ingredient1 = ingredientsInDb.find(
             (ingredient) => ingredient.name === 'Ingredient 1',
           );
-          expect(ingredient1.id).toBe(ingredientsCreatedBefore[0].id);
+          expect(ingredient1?.id).toBe(ingredientsCreatedBefore[0].id);
 
           const ingredient2 = ingredientsInDb.find(
             (ingredient) => ingredient.name === 'Ingredient 2',
           );
-          expect(ingredient2.id).toBe(ingredientsCreatedBefore[1].id);
+          expect(ingredient2?.id).toBe(ingredientsCreatedBefore[1].id);
         });
 
         it('creates the recipe ingredients', async () => {
@@ -245,7 +245,7 @@ describe('SequelizeRecipeRepository', () => {
       let createdIngredients: IngredientModel[];
       let createdRecipeIngredients: RecipeIngredientModel[];
 
-      let recipeAfter: RecipeModel;
+      let recipeAfter: RecipeModel | null;
       let recipeIngredientsAfter: RecipeIngredientModel[];
 
       beforeAll(async () => {
@@ -285,7 +285,7 @@ describe('SequelizeRecipeRepository', () => {
       });
 
       it('updates the recipe name', () => {
-        expect(recipeAfter.name).toBe(recipeToSave.name);
+        expect(recipeAfter?.name).toBe(recipeToSave.name);
       });
 
       it('deletes the recipe ingredients that are not in the new recipe', () => {
@@ -307,7 +307,7 @@ describe('SequelizeRecipeRepository', () => {
       it('creates the new recipe ingredients', () => {
         const newRecipeIngredient = recipeIngredientsAfter.find(
           (recipeIngredient) =>
-            recipeIngredient.ingredient.name === 'Ingredient 3',
+            recipeIngredient.ingredient?.name === 'Ingredient 3',
         );
         expect(newRecipeIngredient).not.toBeUndefined();
         expect(newRecipeIngredient?.amount).toBe(3);
@@ -331,7 +331,7 @@ describe('SequelizeRecipeRepository', () => {
       ],
     });
 
-    let recipeResult: Recipe;
+    let recipeResult: Recipe | null;
 
     beforeAll(async () => {
       await recipeIngredientModel.destroy({ where: {} });
@@ -364,23 +364,23 @@ describe('SequelizeRecipeRepository', () => {
     });
 
     it('returns the recipe', () => {
-      expect(recipeResult.id).toBe(recipe.id);
+      expect(recipeResult?.id).toBe(recipe.id);
     });
 
     it('returns the recipe with correct name', () => {
-      expect(recipeResult.name).toBe(recipe.name);
+      expect(recipeResult?.name).toBe(recipe.name);
     });
 
     it('has 2 ingredients', () => {
-      expect(recipeResult.ingredients).toHaveLength(2);
+      expect(recipeResult?.ingredients).toHaveLength(2);
     });
 
     it('has the correct ingredients', () => {
-      expect(recipeResult.ingredients).toContainEqual({
+      expect(recipeResult?.ingredients).toContainEqual({
         ingredient: 'Ingredient 1',
         quantity: 1,
       });
-      expect(recipeResult.ingredients).toContainEqual({
+      expect(recipeResult?.ingredients).toContainEqual({
         ingredient: 'Ingredient 2',
         quantity: 2,
       });

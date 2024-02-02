@@ -101,12 +101,12 @@ describe('lambda handler', () => {
       let response: any;
       let responseBody: any;
 
-      let createdRecipe: RecipeModel;
+      let createdRecipe: RecipeModel | null;
       let createdIngredients: IngredientModel[];
       let createdRecipeIngredients: RecipeIngredientModel[];
 
       beforeAll(async () => {
-        response = await handler(request, lambdaContext, null);
+        response = await handler(request, lambdaContext, jest.fn());
         responseBody = JSON.parse(response.body);
 
         createdRecipe = await recipeModel.findByPk(responseBody.data.id);
@@ -148,11 +148,11 @@ describe('lambda handler', () => {
 
       it('creates the recipe in the database', () => {
         expect(createdRecipe).not.toBeNull();
-        expect(createdRecipe.id).toBe(responseBody.data.id);
+        expect(createdRecipe?.id).toBe(responseBody.data.id);
       });
 
       it('creates the recipe with the data passed', () => {
-        expect(createdRecipe.name).toBe('Pasta');
+        expect(createdRecipe?.name).toBe('Pasta');
       });
 
       it('creates the ingredients in the database', () => {
@@ -201,7 +201,7 @@ describe('lambda handler', () => {
       let responseBody: any;
 
       beforeAll(async () => {
-        response = await handler(request, lambdaContext, null);
+        response = await handler(request, lambdaContext, jest.fn());
         responseBody = JSON.parse(response.body);
       });
 
@@ -234,7 +234,7 @@ describe('lambda handler', () => {
       let responseBody: any;
 
       beforeAll(async () => {
-        response = await handler(request, lambdaContext, null);
+        response = await handler(request, lambdaContext, jest.fn());
         responseBody = JSON.parse(response.body);
       });
 
@@ -282,7 +282,7 @@ describe('lambda handler', () => {
           amount: 3,
         });
 
-        response = await handler(request, lambdaContext, null);
+        response = await handler(request, lambdaContext, jest.fn());
         responseBody = JSON.parse(response.body);
       });
 
@@ -318,7 +318,7 @@ describe('lambda handler', () => {
       let responseBody: any;
 
       beforeAll(async () => {
-        response = await handler(request, lambdaContext, null);
+        response = await handler(request, lambdaContext, jest.fn());
         responseBody = JSON.parse(response.body);
       });
 
@@ -365,7 +365,7 @@ describe('lambda handler', () => {
           amount: 3,
         });
 
-        response = await handler(request, lambdaContext, null);
+        response = await handler(request, lambdaContext, jest.fn());
       });
 
       it('returns 200 status code', () => {
@@ -386,7 +386,7 @@ describe('lambda handler', () => {
       let response: any;
 
       beforeAll(async () => {
-        response = await handler(request, lambdaContext, null);
+        response = await handler(request, lambdaContext, jest.fn());
       });
 
       it('returns 404 status code', () => {
