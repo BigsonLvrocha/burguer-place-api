@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 
+import { ingredientStorageServiceToken } from '../domain/ingredient-storage-service.js';
 import { recipeRepositoryToken } from '../domain/recipe-repository.js';
 
-import { ingredientStorageServiceToken } from 'domain/ingredient-storage-service.js';
 import { DbModule } from './db/db.module.js';
 import { SequelizeIngredientStorageService } from './sequelize-ingredient-storage-service.js';
 import { SequelizeRecipeRepository } from './sequelize-recipe-repository.js';

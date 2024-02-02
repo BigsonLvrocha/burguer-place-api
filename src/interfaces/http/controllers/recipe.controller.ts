@@ -14,6 +14,7 @@ import {
   DeleteRecipeUseCase,
   GetRecipeUseCase,
   ListRecipesUseCase,
+  ProcessRecipeUseCase,
 } from '../../../use-cases/index.js';
 import { CreateRecipeRequestDto } from '../dto/create-recipe.request.dto.js';
 import { AllExceptionsFilter } from './exception-handler.js';
@@ -26,6 +27,7 @@ export class RecipeController {
     private readonly listRecipesUseCase: ListRecipesUseCase,
     private readonly getRecipeUseCase: GetRecipeUseCase,
     private readonly deleteRecipeUseCase: DeleteRecipeUseCase,
+    private readonly processRecipeUseCase: ProcessRecipeUseCase,
   ) {}
 
   @Post()
@@ -97,5 +99,12 @@ export class RecipeController {
     await this.deleteRecipeUseCase.execute({
       id,
     });
+  }
+
+  @Post(':id/process')
+  @HttpCode(200)
+  @Header('Content-Type', 'application/vnd.api+json')
+  async process(@Param('id') id: string) {
+    await this.processRecipeUseCase.execute({ recipeId: id });
   }
 }

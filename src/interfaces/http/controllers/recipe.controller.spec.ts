@@ -7,6 +7,7 @@ import {
   DeleteRecipeUseCase,
   GetRecipeUseCase,
   ListRecipesUseCase,
+  ProcessRecipeUseCase,
 } from '../../../use-cases/index.js';
 
 import { RecipeController } from './recipe.controller.js';
@@ -17,6 +18,7 @@ describe('recipe controller', () => {
   let mockListRecipesUseCase: { execute: jest.Mock<any> };
   let mockGetRecipeUseCase: { execute: jest.Mock<any> };
   let mockDeleteRecipeUseCase: { execute: jest.Mock<any> };
+  let mockProcessRecipeUseCase: { execute: jest.Mock<any> };
   let controller: RecipeController;
 
   beforeAll(async () => {
@@ -46,6 +48,12 @@ describe('recipe controller', () => {
             execute: jest.fn(),
           },
         },
+        {
+          provide: ProcessRecipeUseCase,
+          useValue: {
+            execute: jest.fn(),
+          },
+        },
         RecipeController,
       ],
     }).compile();
@@ -54,6 +62,7 @@ describe('recipe controller', () => {
     mockListRecipesUseCase = testingModule.get(ListRecipesUseCase);
     mockGetRecipeUseCase = testingModule.get(GetRecipeUseCase);
     mockDeleteRecipeUseCase = testingModule.get(DeleteRecipeUseCase);
+    mockProcessRecipeUseCase = testingModule.get(ProcessRecipeUseCase);
     controller = testingModule.get(RecipeController);
   });
 
@@ -205,6 +214,19 @@ describe('recipe controller', () => {
       expect(mockDeleteRecipeUseCase.execute).toHaveBeenCalledTimes(1);
       expect(mockDeleteRecipeUseCase.execute).toHaveBeenCalledWith({
         id: recipeId,
+      });
+    });
+  });
+
+  describe('process', () => {
+    it('should call use case with the correct parameters', async () => {
+      const recipeId = uuid();
+
+      await controller.process(recipeId);
+
+      expect(mockProcessRecipeUseCase.execute).toHaveBeenCalledTimes(1);
+      expect(mockProcessRecipeUseCase.execute).toHaveBeenCalledWith({
+        recipeId,
       });
     });
   });

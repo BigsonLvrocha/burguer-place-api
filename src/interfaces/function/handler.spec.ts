@@ -394,4 +394,112 @@ describe('lambda handler', () => {
       });
     });
   });
+
+  describe('POST /recipes/{id}/process', () => {
+    describe('when recipe exists', () => {
+      const recipeId = uuid();
+      const ingredientName = `element-${uuid()}`;
+
+      const request = buildHttpLambdaRequest({
+        resourcePath: '/recipe/{id}/process',
+        path: `/recipe/${recipeId}/process`,
+        method: 'POST',
+        body: {},
+        pathParameters: { id: recipeId },
+      });
+
+      let response: any;
+
+      beforeAll(async () => {
+        await recipeModel.create({
+          id: recipeId,
+          name: 'White Pasta',
+        });
+
+        const ingredient = await ingredientModel.create({
+          name: ingredientName,
+          amount: 4,
+        });
+
+        await recipeIngredientModel.create({
+          recipeId,
+          ingredientId: ingredient.id,
+          amount: 3,
+        });
+
+        response = await handler(request, lambdaContext, jest.fn());
+      });
+
+      it('returns 200 status code', () => {
+        expect(response.statusCode).toBe(200);
+      });
+
+      it('updates the ingredient amount', async () => {
+        const ingredientInDb = await ingredientModel.findOne({
+          where: { name: ingredientName },
+        });
+        expect(ingredientInDb?.amount).toBe(1);
+      });
+    });
+
+    describe('when recipe does not exist', () => {
+      const recipeId = uuid();
+      const request = buildHttpLambdaRequest({
+        resourcePath: '/recipe/{id}/process',
+        path: `/recipe/${recipeId}/process`,
+        method: 'POST',
+        body: {},
+        pathParameters: { id: recipeId },
+      });
+
+      let response: any;
+
+      beforeAll(async () => {
+        response = await handler(request, lambdaContext, jest.fn());
+      });
+
+      it('returns 404 status code', () => {
+        expect(response.statusCode).toBe(404);
+      });
+    });
+
+    describe('when there is not enough ingredients', () => {
+      const recipeId = uuid();
+      const ingredientName = `element-${uuid()}`;
+
+      const request = buildHttpLambdaRequest({
+        resourcePath: '/recipe/{id}/process',
+        path: `/recipe/${recipeId}/process`,
+        method: 'POST',
+        body: {},
+        pathParameters: { id: recipeId },
+      });
+
+      let response: any;
+
+      beforeAll(async () => {
+        await recipeModel.create({
+          id: recipeId,
+          name: 'White Pasta',
+        });
+
+        const ingredient = await ingredientModel.create({
+          name: ingredientName,
+          amount: 3,
+        });
+
+        await recipeIngredientModel.create({
+          recipeId,
+          ingredientId: ingredient.id,
+          amount: 4,
+        });
+
+        response = await handler(request, lambdaContext, jest.fn());
+      });
+
+      it('returns 409 status code', () => {
+        expect(response.statusCode).toBe(409);
+      });
+    });
+  });
 });
