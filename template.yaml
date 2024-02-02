@@ -26,17 +26,18 @@ Resources:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     DependsOn: BurguerDBInstance
     Properties:
+      PackageType: Image
       CodeUri: '.'
-      Handler: dist/interfaces/lambda/handler.handler
+      Handler: dist/interfaces/function/index.handler
       Runtime: nodejs20.x
       Architectures:
         - x86_64
       Events:
-        HelloWorld:
+        CreateRecipe:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /hello
-            Method: get
+            Path: /recipe
+            Method: post
       Environment:
         Variables:
           DB_HOST: !GetAtt BurguerDBInstance.Endpoint.Address
@@ -44,26 +45,18 @@ Resources:
           DB_NAME: !GetAtt BurguerDBInstance.DBName
           DB_USER: !GetAtt BurguerDBInstance.MasterUsername
           DB_PASS_ARN: !GetAtt BurguerDBInstance.MasterUserSecret.SecretArn
+          DB_PASS:
 
-    Metadata: # Manage esbuild properties
-      BuildMethod: esbuild
-      BuildProperties:
-        Minify: true
-        Sourcemap: true
-        EntryPoints: 
-        - dist/interfaces/lambda/handler.js
-        External:
-        - class-transformer
-        - class-validator
-        - '@nestjs/microservices'
-        - '@nestjs/websockets'
+    Metadata: # Manage docker metadata
+      DockerContext: .
+      Dockerfile: Dockerfile
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   HelloWorldApi:
-    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+    Description: "API Gateway endpoint URL for Prod stage for create recipe"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
   BurguerPlaceFunction:
     Description: "Hello World Lambda Function ARN"
