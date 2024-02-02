@@ -6,6 +6,7 @@ import { DeleteRecipeUseCase } from './delete-recipe-use-case.js';
 import { GetRecipeUseCase } from './get-recipe-use-case.js';
 import { ListIngredientsUseCase } from './list-ingredients-use-case.js';
 import { ListRecipesUseCase } from './list-recipes-use-case.js';
+import { ProcessRecipeUseCase } from './process-recipe-use-case.js';
 import { UpdateIngredientAmountUseCase } from './update-ingredient-amount-use-case.js';
 
 @Module({
@@ -17,6 +18,7 @@ import { UpdateIngredientAmountUseCase } from './update-ingredient-amount-use-ca
     DeleteRecipeUseCase,
     UpdateIngredientAmountUseCase,
     ListIngredientsUseCase,
+    ProcessRecipeUseCase,
   ],
   exports: [
     CreateOrUpdateRecipeUseCase,
@@ -25,6 +27,7 @@ import { UpdateIngredientAmountUseCase } from './update-ingredient-amount-use-ca
     DeleteRecipeUseCase,
     UpdateIngredientAmountUseCase,
     ListIngredientsUseCase,
+    ProcessRecipeUseCase,
   ],
 })
 export class UseCaseModule {}
