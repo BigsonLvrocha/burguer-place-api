@@ -1,11 +1,15 @@
-import { Body, Controller, Header, HttpCode, Post } from '@nestjs/common';
-import { CreateOrUpdateRecipeUseCase } from '../../../use-cases/create-or-update-recipe-use-case.js';
+import { Body, Controller, Get, Header, HttpCode, Post } from '@nestjs/common';
+import {
+  CreateOrUpdateRecipeUseCase,
+  ListRecipesUseCase,
+} from '../../../use-cases/index.js';
 import { CreateRecipeRequestDto } from '../dto/create-recipe.request.dto.js';
 
 @Controller('recipe')
 export class RecipeController {
   constructor(
     private readonly createOrUpdateRecipeUseCase: CreateOrUpdateRecipeUseCase,
+    private readonly listRecipesUseCase: ListRecipesUseCase,
   ) {}
 
   @Post()
@@ -28,6 +32,23 @@ export class RecipeController {
           ingredients: data.ingredients,
         },
       },
+    };
+  }
+
+  @Get()
+  @HttpCode(200)
+  @Header('Content-Type', 'application/vnd.api+json')
+  async list() {
+    const data = await this.listRecipesUseCase.execute();
+    return {
+      data: data.map((recipe) => ({
+        type: 'recipe',
+        id: recipe.id,
+        attributes: {
+          name: recipe.name,
+          ingredients: recipe.ingredients,
+        },
+      })),
     };
   }
 }

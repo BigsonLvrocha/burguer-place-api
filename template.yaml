@@ -38,6 +38,11 @@ Resources:
           Properties:
             Path: /recipe
             Method: post
+        ListRecipe:
+          Type: Api
+          Properties:
+            Path: /recipe
+            Method: get
       Environment:
         Variables:
           DB_HOST: !GetAtt BurguerDBInstance.Endpoint.Address

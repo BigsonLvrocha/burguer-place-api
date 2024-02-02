@@ -2,13 +2,17 @@ import { jest } from '@jest/globals';
 import { Test, TestingModule } from '@nestjs/testing';
 import { v4 as uuid } from 'uuid';
 
-import { CreateOrUpdateRecipeUseCase } from '../../../use-cases/create-or-update-recipe-use-case.js';
+import {
+  CreateOrUpdateRecipeUseCase,
+  ListRecipesUseCase,
+} from '../../../use-cases/index.js';
 
 import { RecipeController } from './recipe.controller.js';
 
 describe('recipe controller', () => {
   let testingModule: TestingModule;
-  let mockUseCase: { execute: jest.Mock<any> };
+  let mockCreateOrUpdateUseCase: { execute: jest.Mock<any> };
+  let mockListRecipesUseCase: { execute: jest.Mock<any> };
   let controller: RecipeController;
 
   beforeAll(async () => {
@@ -20,16 +24,23 @@ describe('recipe controller', () => {
             execute: jest.fn(),
           },
         },
+        {
+          provide: ListRecipesUseCase,
+          useValue: {
+            execute: jest.fn(),
+          },
+        },
         RecipeController,
       ],
     }).compile();
 
-    mockUseCase = testingModule.get(CreateOrUpdateRecipeUseCase);
+    mockCreateOrUpdateUseCase = testingModule.get(CreateOrUpdateRecipeUseCase);
+    mockListRecipesUseCase = testingModule.get(ListRecipesUseCase);
     controller = testingModule.get(RecipeController);
   });
 
   beforeEach(() => {
-    mockUseCase.execute.mockReset();
+    mockCreateOrUpdateUseCase.execute.mockReset();
   });
 
   afterAll(async () => {
@@ -54,7 +65,7 @@ describe('recipe controller', () => {
         },
       };
 
-      mockUseCase.execute.mockResolvedValue({
+      mockCreateOrUpdateUseCase.execute.mockResolvedValue({
         id: recipeId,
         name: request.data.attributes.name,
         ingredients: request.data.attributes.ingredients,
@@ -62,8 +73,8 @@ describe('recipe controller', () => {
 
       const response = await controller.create(request);
 
-      expect(mockUseCase.execute).toHaveBeenCalledTimes(1);
-      expect(mockUseCase.execute).toHaveBeenCalledWith({
+      expect(mockCreateOrUpdateUseCase.execute).toHaveBeenCalledTimes(1);
+      expect(mockCreateOrUpdateUseCase.execute).toHaveBeenCalledWith({
         name: request.data.attributes.name,
         ingredients: request.data.attributes.ingredients,
       });
@@ -77,6 +88,45 @@ describe('recipe controller', () => {
             ingredients: request.data.attributes.ingredients,
           },
         },
+      });
+    });
+  });
+
+  describe('list', () => {
+    it('should call use case and return the result', async () => {
+      const recipeId = uuid();
+      mockListRecipesUseCase.execute.mockResolvedValue([
+        {
+          id: recipeId,
+          name: 'Recipe Name',
+          ingredients: [
+            {
+              name: 'Ingredient',
+              amount: 1,
+            },
+          ],
+        },
+      ]);
+
+      const response = await controller.list();
+
+      expect(mockListRecipesUseCase.execute).toHaveBeenCalledTimes(1);
+      expect(response).toEqual({
+        data: [
+          {
+            type: 'recipe',
+            id: recipeId,
+            attributes: {
+              name: 'Recipe Name',
+              ingredients: [
+                {
+                  name: 'Ingredient',
+                  amount: 1,
+                },
+              ],
+            },
+          },
+        ],
       });
     });
   });
