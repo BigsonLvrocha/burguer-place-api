@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Header,
-  Param,
-  ParseUUIDPipe,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Header, HttpCode, Post } from '@nestjs/common';
 import { CreateOrUpdateRecipeUseCase } from '../../../use-cases/create-or-update-recipe-use-case.js';
 import { CreateRecipeRequestDto } from '../dto/create-recipe.request.dto.js';
 
@@ -16,15 +8,12 @@ export class RecipeController {
     private readonly createOrUpdateRecipeUseCase: CreateOrUpdateRecipeUseCase,
   ) {}
 
-  @Put(':id')
   @Post()
+  @HttpCode(200)
   @Header('Content-Type', 'application/vnd.api+json')
-  async create(
-    @Body() body: CreateRecipeRequestDto,
-    @Param('id', new ParseUUIDPipe({ optional: true })) id?: string,
-  ) {
+  async create(@Body() body: CreateRecipeRequestDto) {
     const recipeToCreate = {
-      id: id ?? body.data.id,
+      id: body.data.id,
       name: body.data.attributes.name,
       ingredients: body.data.attributes.ingredients,
     };

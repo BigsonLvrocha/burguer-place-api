@@ -1,6 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
-import { IngredientAmount, Recipe, RecipeRepository } from '../domain/index.js';
+import {
+  IngredientAmount,
+  Recipe,
+  RecipeRepository,
+  recipeRepositoryToken,
+} from '../domain/index.js';
 
 import { UseCase } from './use-case.js';
 
@@ -30,7 +35,9 @@ export class CreateOrUpdateRecipeUseCase
       CreateOrUpdateRecipeUseCaseResponse
     >
 {
-  constructor(private recipeRepository: RecipeRepository) {}
+  constructor(
+    @Inject(recipeRepositoryToken) private recipeRepository: RecipeRepository,
+  ) {}
 
   async execute(
     request: CreateOrUpdateRecipeUseCaseRequest,
