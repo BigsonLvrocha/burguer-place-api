@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { RecipeRepository, recipeRepositoryToken } from '../domain/index.js';
 import { UseCase } from './use-case.js';
 
@@ -15,6 +15,7 @@ type GetRecipeUseCaseResponse = {
   }[];
 } | null;
 
+@Injectable()
 export class GetRecipeUseCase
   implements UseCase<GetRecipeUseCaseRequest, GetRecipeUseCaseResponse>
 {

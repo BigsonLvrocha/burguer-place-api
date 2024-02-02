@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   IngredientAmount,
   IngredientStorageService,
@@ -11,6 +11,7 @@ type UpdateIngredientAmountUseCaseRequest = {
   quantity: number;
 };
 
+@Injectable()
 export class UpdateIngredientAmountUseCase
   implements
     UseCase<

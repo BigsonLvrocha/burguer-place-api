@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import {
   IngredientStorageService,
@@ -14,6 +14,8 @@ import { UseCase } from './use-case.js';
 type ProcessRecipeUseCaseRequest = {
   recipeId: string;
 };
+
+@Injectable()
 export class ProcessRecipeUseCase
   implements UseCase<ProcessRecipeUseCaseRequest, undefined>
 {

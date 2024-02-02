@@ -502,4 +502,57 @@ describe('lambda handler', () => {
       });
     });
   });
+
+  describe('GET /ingredient-amount', () => {
+    describe('list ingredients', () => {
+      const request = buildHttpLambdaRequest({
+        path: '/ingredient-amount',
+        method: 'GET',
+        body: {},
+      });
+
+      let response: any;
+      let responseBody: any;
+
+      beforeAll(async () => {
+        await ingredientModel.destroy({ where: {} });
+        await ingredientModel.bulkCreate([
+          { name: 'Flour', amount: 1 },
+          { name: 'Water', amount: 1 },
+        ]);
+
+        response = await handler(request, lambdaContext, jest.fn());
+        responseBody = JSON.parse(response.body);
+      });
+
+      it('returns 200 status code', () => {
+        expect(response.statusCode).toBe(200);
+      });
+
+      it('returns all the ingredients in the table', () => {
+        expect(responseBody.data).toHaveLength(2);
+      });
+
+      it('returns the ingredients', () => {
+        expect(responseBody).toMatchObject({
+          data: expect.arrayContaining([
+            {
+              type: 'ingredientAmount',
+              attributes: {
+                name: 'Flour',
+                amount: 1,
+              },
+            },
+            {
+              type: 'ingredientAmount',
+              attributes: {
+                name: 'Water',
+                amount: 1,
+              },
+            },
+          ]),
+        });
+      });
+    });
+  });
 });

@@ -1,8 +1,9 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { RecipeRepository, recipeRepositoryToken } from '../domain/index.js';
 import { RecipeNotFoundException } from './exceptions/recipe-not-found-exception.js';
 import { UseCase } from './use-case.js';
 
+@Injectable()
 export class DeleteRecipeUseCase implements UseCase<{ id: string }, undefined> {
   constructor(
     @Inject(recipeRepositoryToken)

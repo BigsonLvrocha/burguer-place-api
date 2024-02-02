@@ -58,6 +58,11 @@ Resources:
           Properties:
             Path: /recipe/{id}/process
             Method: post
+        ListIngredientsAmount:
+          Type: Api
+          Properties:
+            Path: /ingredient-amount
+            Method: get
       Environment:
         Variables:
           DB_HOST: !GetAtt BurguerDBInstance.Endpoint.Address
