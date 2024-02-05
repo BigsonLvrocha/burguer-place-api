@@ -1,8 +1,8 @@
-# Burguer
+# Burguerplace api
 
 ## Description
 
-Repository for a serverless application to practice
+Repository for a serverless application to practice coding skills
 
 ## Installation
 
@@ -14,13 +14,7 @@ $ npm install
 
 ```bash
 # development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+$ make local-run
 ```
 
 ## Test
@@ -28,24 +22,16 @@ $ npm run start:prod
 ```bash
 # unit tests
 $ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
-## Support
+## Folder structure
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+The app is divided in layers, each one with it's own responsibilities.
 
-## Stay in touch
+- interface: Contains the entrypoints of the application, acts a layer of translating external interfaces to the application itself
+  - http: JSON-api
+  - lambda: translate lambda api requests into http calls
+- use-case: Application layer, define the application specific interface and uses domain and infrastructure layer to execute, efectivelly hidin implementation details from interface code
+- domain: Define application business rules, apply structure data validation.
+- infrastructure: implements application interface with the database, hides implementation details from domain and application layers
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
