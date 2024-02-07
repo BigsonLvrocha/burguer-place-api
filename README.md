@@ -35,3 +35,8 @@ The app is divided in layers, each one with it's own responsibilities.
 - domain: Define application business rules, apply structure data validation.
 - infrastructure: implements application interface with the database, hides implementation details from domain and application layers
 
+## Next steps
+- Add pagination or listing by id to listing endpoints `/recipes` and `/ingredient-amount`
+- Add authentication
+- Add dynamic VPC, Subnet and Security group allocation
+- Manage SQL schema through migration
