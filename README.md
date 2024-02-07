@@ -38,5 +38,6 @@ The app is divided in layers, each one with it's own responsibilities.
 ## Next steps
 - Add pagination or listing by id to listing endpoints `/recipes` and `/ingredient-amount`
 - Add authentication
-- Add dynamic VPC, Subnet and Security group allocation
 - Manage SQL schema through migration
+- Add dynamic VPC, Subnet and Security group allocation
+- Automatic setup/teardown of endpoint
